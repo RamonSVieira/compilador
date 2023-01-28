@@ -14,15 +14,49 @@ file.addEventListener("change", function () {
     for (let i = 0; i <= arrayDados.length - 1; i++) {
       let element = arrayDados[i].split(" ");
 
-      const obj = {
-        opcode: opCodeToBin(element[0]),
-        a: toAnyBitBinary(anyToBin(element[1]), 5),
-        b: toAnyBitBinary(anyToBin(element[2]), 5),
-        imm: toAnyBitBinary(anyToBin(element[3]), 16),
-      };
+      console.log(element[0], element[1], element[2], element[3]);
 
-      dadosObj.push(binaryToHex(obj.opcode + obj.a + obj.b + obj.imm) + "\n");
+      if (
+        element[0].slice(-1) !== "i" &&
+        element[0] !== "beq" &&
+        element[0] !== "bne"
+      ) {
+        const obj = {
+          opcode: "000000",
+          regW: binaryToXBitsBinary(anyToBin(element[1]), 5),
+          regS: binaryToXBitsBinary(anyToBin(element[2]), 5),
+          regT: binaryToXBitsBinary(anyToBin(element[3]), 5),
+          shiftamount: "00000",
+          opfunction: opToBin(element[0]),
+        };
+
+        dadosObj.push(
+          binaryToHex(
+            obj.opcode +
+              obj.regS +
+              obj.regT +
+              obj.regW +
+              obj.shiftamount +
+              obj.opfunction
+          ) + "\n"
+        );
+      } else {
+        const obj = {
+          opcode: opToBin(element[0]),
+          a: binaryToXBitsBinary(anyToBin(element[1]), 5),
+          b: binaryToXBitsBinary(anyToBin(element[2]), 5),
+          imm: binaryToXBitsBinary(anyToBin(element[3]), 16),
+        };
+
+        console.log(obj.a, obj.b, obj.imm, obj.opcode);
+
+        dadosObj.push(binaryToHex(obj.opcode + obj.a + obj.b + obj.imm) + "\n");
+      }
     }
+
+    dadosObj.unshift("V2.0 raw\n");
+
+    console.log(dadosObj);
 
     downFile.addEventListener("click", () => {
       download()(dadosObj.toString().replaceAll(",", ""), "arquivo.txt");
@@ -34,33 +68,92 @@ file.addEventListener("change", function () {
   }
 });
 
-function opCodeToBin(opCode) {
+function opToBin(opCode) {
   const binOpCode = {
     addi: "001000",
     andi: "001100",
-    beq: "000100",
-    bne: "000101",
     ori: "001101",
     xori: "001110",
+    beq: "000100",
+    bne: "000101",
+
+    and: "100100",
+    or: "100101",
+    xor: "100110",
+    nor: "100111",
+    add: "100000",
+    sub: "100010",
+    slt: "101010",
   };
 
   return binOpCode[opCode];
 }
 
-function decimalToBinary(decimal) {
-  return decimal.toString(2);
+function decimalToBinary(num) {
+  return num.toString(2);
+}
+
+function addBinary(a, b) {
+  let result = ""; // string para armazenar o resultado
+  let carry = 0; // variável para armazenar o "carry" (vai 1)
+
+  // percorrer os bits dos números a partir do último
+  for (let i = a.length - 1; i >= 0; i--) {
+    let sum = carry; // inicializar com o "carry"
+    sum += parseInt(a[i]); // adicionar o bit do número a
+    sum += parseInt(b[i]); // adicionar o bit do número b
+
+    // determinar o bit do resultado e o "carry" para a próxima iteração
+    if (sum === 2) {
+      result = "0" + result;
+      carry = 1;
+    } else if (sum === 3) {
+      result = "1" + result;
+      carry = 1;
+    } else {
+      result = sum.toString() + result;
+      carry = 0;
+    }
+  }
+  if (carry === 1) {
+    result = "1" + result;
+  }
+
+  return result;
 }
 
 function anyToBin(value) {
   if (value[0] === "$") {
     return decimalToBinary(parseInt(value.substr(1)));
+  } else if (value < 0) {
+    unsignedValue = value.substring(1);
+    numBin = anyToBin(unsignedValue);
+
+    invertedBits = numBin
+      .replace(/0/g, "a")
+      .replace(/1/g, "0")
+      .replace(/a/g, "1");
+
+    console.log(value);
+    console.log(unsignedValue);
+    console.log(numBin);
+    console.log(invertedBits);
+
+    return addBinary(
+      binaryToXBitsBinaryNegative(invertedBits, 16),
+      binaryToXBitsBinary("1", 16)
+    );
   } else {
     return decimalToBinary(parseInt(value));
   }
 }
 
-function toAnyBitBinary(num, bits) {
-  return num.toString(2).padStart(bits, "0");
+function binaryToXBitsBinary(num, bits) {
+  return num.padStart(bits, "0");
+}
+
+function binaryToXBitsBinaryNegative(num, bits) {
+  return num.padStart(bits, "1");
 }
 
 function binaryToHex(binary) {

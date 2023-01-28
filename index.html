@@ -5,18 +5,49 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="./styles/main.css">
+
   <title>Document</title>
 </head>
 
 <body>
 
-  <input type="file" name="" id="send_file">
+  <header>
+    <h1>Converter<span>TxT</span></h1>
+  </header>
 
-  <br><br>
+  <div class="main">
+    <div class="send">
+      <p>Clique abaixo ou arraste seu arquivo txt em assembly para convertê-lo em hex.</p>
+      <label for="send_file">
+        <span>Enviar</span>
+        <i class="fa-solid fa-file-import"></i>
+      </label>
+      <input type="file" name="send_file" id="send_file">
+    </div>
 
-  <button id="donw_file">Baixar</button>
+    <i class="fa-solid fa-arrow-down"></i>
+
+    <div class="down">
+      <button id="donw_file" disabled>
+        <span>Baixar</span>
+        <i class="fa-solid fa-file-arrow-down"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="layer d-none"></div>
+  <div class="layer-red d-none"></div>
 
   <script src="./main.js"></script>
+  <script src="./events.js"></script>
 </body>
 
 </html>
