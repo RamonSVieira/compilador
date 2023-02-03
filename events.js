@@ -1,18 +1,23 @@
-let element = document.querySelector("body");
-let isOver = false;
+const area = document.querySelector(".send");
+const body = document.querySelector("body");
+const buttonSend = document.querySelector(".send input");
+const down = document.querySelector("#donw_file");
 
-element.addEventListener("dragover", function (event) {
-  event.preventDefault();
-  if (!isOver) {
-    element.classList.add("dragOver");
-    isOver = true;
-  }
+area.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  body.classList.add("dragover");
 });
 
-element.addEventListener("dragleave", function (event) {
-  event.preventDefault();
-  if (isOver) {
-    element.classList.remove("dragOver");
-    isOver = false;
+area.addEventListener("drop", (e) => {
+  e.preventDefault();
+  body.classList.remove("dragover");
+});
+
+buttonSend.addEventListener("change", () => {
+  let file = buttonSend.files[0];
+
+  if (file) {
+    down.removeAttribute("disabled");
+    down.classList.add("habilitado");
   }
 });

@@ -14,8 +14,6 @@ file.addEventListener("change", function () {
     for (let i = 0; i <= arrayDados.length - 1; i++) {
       let element = arrayDados[i].split(" ");
 
-      console.log(element[0], element[1], element[2], element[3]);
-
       if (
         element[0].slice(-1) !== "i" &&
         element[0] !== "beq" &&
@@ -48,15 +46,11 @@ file.addEventListener("change", function () {
           imm: binaryToXBitsBinary(anyToBin(element[3]), 16),
         };
 
-        console.log(obj.a, obj.b, obj.imm, obj.opcode);
-
         dadosObj.push(binaryToHex(obj.opcode + obj.a + obj.b + obj.imm) + "\n");
       }
     }
 
     dadosObj.unshift("V2.0 raw\n");
-
-    console.log(dadosObj);
 
     downFile.addEventListener("click", () => {
       download()(dadosObj.toString().replaceAll(",", ""), "arquivo.txt");
@@ -133,11 +127,6 @@ function anyToBin(value) {
       .replace(/0/g, "a")
       .replace(/1/g, "0")
       .replace(/a/g, "1");
-
-    console.log(value);
-    console.log(unsignedValue);
-    console.log(numBin);
-    console.log(invertedBits);
 
     return addBinary(
       binaryToXBitsBinaryNegative(invertedBits, 16),

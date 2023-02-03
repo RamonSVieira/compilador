@@ -54,6 +54,8 @@ header span {
 
   background-color: #000000;
   max-width: 600px;
+
+  position: relative;
 }
 
 .send p {
@@ -85,6 +87,8 @@ header span {
   color: #000000;
 
   transition: background-color 0.3s;
+
+  z-index: 2;
 }
 
 .send label span {
@@ -109,20 +113,17 @@ header span {
 }
 
 .send input {
-  /* display: none; */
-}
-
-.send input {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  visibility: hidden;
+  opacity: 0;
 }
 
 .down button {
   display: flex;
+  align-items: center;
   gap: 16px;
 
   border: none;
@@ -137,6 +138,17 @@ header span {
 
   font-size: 24px;
   font-weight: bold;
+
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.down button i {
+  font-size: 30px;
+}
+
+.down button.habilitado:hover {
+  background-color: #719b99;
+  color: #ffffff;
 }
 
 .layer {
@@ -161,13 +173,21 @@ header span {
   width: 100vw;
   height: 100vh;
   background: rgba(58, 99, 122, 0.65);
-  z-index: 99;
+  z-index: 2;
 }
 
 .d-none {
   display: none;
 }
 
-.dragOver .d-none {
+.dragover .d-none {
   display: block;
+}
+
+.dragover .send {
+  position: static;
+}
+
+.dragover .send input {
+  z-index: 99;
 }
